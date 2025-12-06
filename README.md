@@ -11,7 +11,7 @@
 
 ## 在线体验
 
-访问 GitHub Pages：`https://jingkeling.github.io/christmas-tree/`
+访问 GitHub Pages：`https://christmas-tree.yesxno.com`
 
 ## 使用说明
 
