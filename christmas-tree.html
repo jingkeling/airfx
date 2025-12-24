@@ -1,14 +1,28 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D 圣诞树幻境 - 手势交互版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { margin: 0; overflow: hidden; background-color: #000000; font-family: 'Times New Roman', serif; }
-        #canvas-container { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; z-index: 1; }
-        
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000000;
+            font-family: 'Times New Roman', serif;
+        }
+
+        #canvas-container {
+            width: 100vw;
+            height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
         .glass-panel {
             background: rgba(20, 20, 20, 0.7);
             backdrop-filter: blur(16px);
@@ -26,11 +40,13 @@
             align-items: center;
             justify-content: center;
         }
+
         .control-btn:hover {
             background: rgba(212, 175, 55, 0.15);
             transform: translateY(-2px);
             box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
         }
+
         .control-btn.active {
             background: linear-gradient(135deg, rgba(212, 175, 55, 0.4), rgba(212, 175, 55, 0.1));
             border: 1px solid rgba(212, 175, 55, 0.5);
@@ -38,13 +54,15 @@
         }
 
         /* Typography - Centerpiece */
-        h1 { 
-            color: #fceea7; 
-            font-size: 110px; /* 进一步增大标题字号 */
-            margin: 0; 
-            font-weight: 400; 
-            letter-spacing: 12px; /* 进一步增加字母间距 */
-            text-shadow: 0 0 60px rgba(252, 238, 167, 0.7); 
+        h1 {
+            color: #fceea7;
+            font-size: 110px;
+            /* 进一步增大标题字号 */
+            margin: 0;
+            font-weight: 400;
+            letter-spacing: 12px;
+            /* 进一步增加字母间距 */
+            text-shadow: 0 0 60px rgba(252, 238, 167, 0.7);
             background: linear-gradient(to bottom, #fff, #eebb66);
             -webkit-background-clip: text;
             background-clip: text;
@@ -62,6 +80,7 @@
             pointer-events: none;
             visibility: hidden;
         }
+
         .ui-toggle-persistent {
             z-index: 100;
         }
@@ -89,10 +108,17 @@
             display: flex;
             animation: slideInRight 0.4s ease-out;
         }
-        
+
         @keyframes slideInRight {
-            from { opacity: 0; transform: translateX(50px); }
-            to { opacity: 1; transform: translateX(0); }
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         #camera-window-header {
@@ -122,7 +148,8 @@
 
         #camera-window-video {
             position: absolute;
-            top: 0; left: 0;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             object-fit: fill;
@@ -131,7 +158,8 @@
 
         #camera-window-canvas {
             position: absolute;
-            top: 0; left: 0;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             object-fit: fill;
@@ -164,8 +192,15 @@
         }
 
         @keyframes slideInLeft {
-            from { opacity: 0; transform: translate(-50px, -50%); }
-            to { opacity: 1; transform: translate(0, -50%); }
+            from {
+                opacity: 0;
+                transform: translate(-50px, -50%);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(0, -50%);
+            }
         }
 
         #gesture-guide-header {
@@ -273,14 +308,22 @@
 
         /* Slideshow Pop-in Animation */
         @keyframes popIn {
-            0% { opacity: 0; transform: scale(0.5) translateY(20px); }
-            100% { opacity: 1; transform: scale(1) translateY(0); }
+            0% {
+                opacity: 0;
+                transform: scale(0.5) translateY(20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
         }
+
         .animate-pop-in {
             animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
     </style>
-    
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
     </style>
@@ -295,10 +338,13 @@
     </script>
     <!-- MediaPipe Hands -->
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"
+        crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
 </head>
+
 <body>
 
     <div id="loader">
@@ -308,30 +354,40 @@
 
     <div id="canvas-container"></div>
 
-    <div id="ui-layer" class="absolute top-0 left-0 w-full h-full pointer-events-none z-10 p-4 md:p-8 flex flex-col justify-between">
+    <div id="ui-layer"
+        class="absolute top-0 left-0 w-full h-full pointer-events-none z-10 p-4 md:p-8 flex flex-col justify-between">
         <!-- Top Section -->
         <div class="relative w-full flex justify-end items-start pointer-events-auto">
             <!-- Top Center Title -->
             <div class="absolute left-1/2 -translate-x-1/2 top-0 text-center pointer-events-none">
                 <h1 class="whitespace-nowrap select-none">Merry Christmas</h1>
             </div>
-            
+
             <!-- Top Right Controls -->
             <div class="flex gap-3 relative z-20">
-                <label class="px-6 py-3 bg-gradient-to-br from-[#d4af37] to-[#aa8a2e] text-white control-btn rounded-full cursor-pointer group shadow-[0_4px_20px_rgba(212,175,55,0.5)] border border-yellow-200/50 transition-all duration-300 hover:shadow-[0_4px_30px_rgba(212,175,55,0.7)] hover:scale-105">
+                <label
+                    class="px-6 py-3 bg-gradient-to-br from-[#d4af37] to-[#aa8a2e] text-white control-btn rounded-full cursor-pointer group shadow-[0_4px_20px_rgba(212,175,55,0.5)] border border-yellow-200/50 transition-all duration-300 hover:shadow-[0_4px_30px_rgba(212,175,55,0.7)] hover:scale-105">
                     <span class="text-xs font-black tracking-[0.2em] uppercase drop-shadow-md">添加回忆</span>
                     <input type="file" id="file-input" multiple accept="image/*" class="hidden">
                 </label>
-                <button id="ui-visibility-btn" class="glass-panel p-3 text-white hover:text-yellow-200 control-btn rounded-full group ui-toggle-persistent" title="显示/隐藏UI">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path id="ui-icon-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c3.85 0 7.29 2.056 9.542 5.196a1.207 1.207 0 010 1.608C19.29 14.944 15.85 17 12 17c-4.477 0-8.268-2.943-9.542-7z" />
+                <button id="ui-visibility-btn"
+                    class="glass-panel p-3 text-white hover:text-yellow-200 control-btn rounded-full group ui-toggle-persistent"
+                    title="显示/隐藏UI">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path id="ui-icon-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c3.85 0 7.29 2.056 9.542 5.196a1.207 1.207 0 010 1.608C19.29 14.944 15.85 17 12 17c-4.477 0-8.268-2.943-9.542-7z" />
                     </svg>
                 </button>
 
-                <button id="fullscreen-btn" class="glass-panel p-3 text-white hover:text-yellow-200 control-btn rounded-full group">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                <button id="fullscreen-btn"
+                    class="glass-panel p-3 text-white hover:text-yellow-200 control-btn rounded-full group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:scale-110 transition-transform"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
                     </svg>
                 </button>
             </div>
@@ -339,20 +395,46 @@
 
         <!-- Bottom Section -->
         <div class="w-full flex justify-between items-end pointer-events-auto">
-            <!-- Bottom Left: Toggles -->
-            <div class="flex flex-col gap-3">
+            <!-- Bottom Left: Toggles & Theme -->
+            <div class="flex flex-col gap-4">
+                <!-- Theme Selector -->
+                <div class="glass-panel px-5 py-3 rounded-full flex items-center gap-4">
+                    <span class="text-xs font-bold tracking-widest text-white">主题色彩</span>
+                    <div class="flex gap-3">
+                        <!-- Gold Theme -->
+                        <button id="theme-gold"
+                            class="w-6 h-6 rounded-full bg-[#d4af37] border-2 border-white/30 hover:scale-110 transition-transform shadow-lg cursor-pointer"
+                            title="豪华金"></button>
+                        <!-- Mix Theme -->
+                        <button id="theme-mix"
+                            class="w-6 h-6 rounded-full overflow-hidden border-2 border-white/30 hover:scale-110 transition-transform shadow-lg cursor-pointer flex"
+                            title="经典绿金">
+                            <div class="w-1/2 h-full bg-[#1a472a]"></div>
+                            <div class="w-1/2 h-full bg-[#d4af37]"></div>
+                        </button>
+                        <!-- Green Theme -->
+                        <button id="theme-green"
+                            class="w-6 h-6 rounded-full bg-[#1a472a] border-2 border-white/30 hover:scale-110 transition-transform shadow-lg cursor-pointer"
+                            title="森之绿"></button>
+                    </div>
+                </div>
+
                 <div class="glass-panel px-5 py-3 rounded-full flex items-center gap-3">
                     <span class="text-xs font-bold tracking-widest text-white">显示摄像头</span>
                     <label class="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" id="camera-toggle" class="sr-only peer" checked>
-                        <div class="w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-yellow-300 dark:peer-focus:ring-yellow-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-yellow-500"></div>
+                        <div
+                            class="w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-yellow-300 dark:peer-focus:ring-yellow-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-yellow-500">
+                        </div>
                     </label>
                 </div>
                 <div class="glass-panel px-5 py-3 rounded-full flex items-center gap-3">
-                    <span class="text-xs font-bold tracking-widest text-white">手动旋转控制</span>
+                    <span class="text-xs font-bold tracking-widest text-white">旋转由手掌控制</span>
                     <label class="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" id="rotation-toggle" class="sr-only peer">
-                        <div class="w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-yellow-300 dark:peer-focus:ring-yellow-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-yellow-500"></div>
+                        <div
+                            class="w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-yellow-300 dark:peer-focus:ring-yellow-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-yellow-500">
+                        </div>
                     </label>
                 </div>
             </div>
@@ -404,10 +486,12 @@
     </div>
 
     <!-- Slideshow Overlay -->
-    <div id="slideshow-overlay" class="hidden fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-300 pointer-events-none">
+    <div id="slideshow-overlay"
+        class="hidden fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-300 pointer-events-none">
         <!-- Polaroid Film Style Container -->
         <div class="relative p-4 flex flex-col items-center justify-center animate-pop-in">
-            <div class="p-4 pb-8 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.5),0_5px_15px_rgba(0,0,0,0.3)] rounded-sm rotate-1 border border-gray-200 pointer-events-auto">
+            <div
+                class="p-4 pb-8 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.5),0_5px_15px_rgba(0,0,0,0.3)] rounded-sm rotate-1 border border-gray-200 pointer-events-auto">
                 <div class="bg-gray-100 overflow-hidden border border-gray-300">
                     <img id="slideshow-img" class="max-w-[75vw] max-h-[60vh] object-contain" src="" alt="Memory">
                 </div>
@@ -428,55 +512,57 @@
         // --- CONFIGURATION ---
         const CONFIG = {
             colors: {
-                bg: 0x000000, 
-                champagneGold: 0xffd966, 
-                deepGreen: 0x03180a,     
-                accentRed: 0x990000,     
+                bg: 0x000000,
+                champagneGold: 0xffd966,
+                deepGreen: 0x1a472a,     // 调亮绿色，使其更明显
+                accentRed: 0x990000,
             },
             particles: {
-                count: 1500,     
-                dustCount: 2500, 
-                treeHeight: 24,  
-                treeRadius: 8    
+                count: 1500,
+                dustCount: 2500,
+                treeHeight: 24,
+                treeRadius: 8
             },
             camera: {
-                z: 50 
+                z: 50
             }
         };
 
         const STATE = {
-            mode: 'TREE', 
-            focusIndex: -1, 
+            mode: 'TREE',
+            focusIndex: -1,
             focusTarget: null,
             hand: { detected: false, x: 0, y: 0, leftPinchTriggered: false, rightPinchActive: false },
             rotation: { x: 0, y: 0 },
-            isRotationEnabled: false, // 默认关闭旋转控制
+            isRotationEnabled: false,
+            themeMode: 'GOLD',      // 可选值: 'GOLD', 'MIX', 'GREEN'
             photoSources: [],
             slideshowIndex: -1,
             hasUserPhotos: false
         };
 
         let scene, camera, renderer, composer;
-        let mainGroup; 
+        let mainGroup;
         let clock = new THREE.Clock();
-        let particleSystem = []; 
+        let particleSystem = [];
         let photoMeshGroup = new THREE.Group();
         let hands, video, webcamCanvas, webcamCtx;
         let cameraWindowVideo, cameraWindowCanvas, cameraWindowCtx;
-        let caneTexture; 
+        let caneTexture;
+        let goldMat, greenMat; // 提升作用域以便切换颜色
 
         async function init() {
             initThree();
-            setupEnvironment(); 
+            setupEnvironment();
             setupLights();
             createTextures();
-            createParticles(); 
-            createDust();     
+            createParticles();
+            createDust();
             createDefaultPhotos();
             setupPostProcessing();
             setupEvents();
             await initMediaPipe();
-            
+
             const loader = document.getElementById('loader');
             loader.style.opacity = 0;
             setTimeout(() => loader.remove(), 800);
@@ -488,16 +574,16 @@
             const container = document.getElementById('canvas-container');
             scene = new THREE.Scene();
             scene.background = new THREE.Color(CONFIG.colors.bg);
-            scene.fog = new THREE.FogExp2(CONFIG.colors.bg, 0.01); 
+            scene.fog = new THREE.FogExp2(CONFIG.colors.bg, 0.01);
 
             camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.set(0, 2, CONFIG.camera.z); 
+            camera.position.set(0, 2, CONFIG.camera.z);
 
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: "high-performance" });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            renderer.toneMapping = THREE.ReinhardToneMapping; 
-            renderer.toneMappingExposure = 2.2; 
+            renderer.toneMapping = THREE.ReinhardToneMapping;
+            renderer.toneMappingExposure = 2.2;
             container.appendChild(renderer.domElement);
 
             mainGroup = new THREE.Group();
@@ -526,7 +612,7 @@
             const spotBlue = new THREE.SpotLight(0x6688ff, 600);
             spotBlue.position.set(-30, 20, -30);
             scene.add(spotBlue);
-            
+
             const fill = new THREE.DirectionalLight(0xffeebb, 0.8);
             fill.position.set(0, 0, 50);
             scene.add(fill);
@@ -535,8 +621,8 @@
         function setupPostProcessing() {
             const renderScene = new RenderPass(scene, camera);
             const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
-            bloomPass.threshold = 0.7; 
-            bloomPass.strength = 0.45; 
+            bloomPass.threshold = 0.7;
+            bloomPass.strength = 0.45;
             bloomPass.radius = 0.4;
 
             composer = new EffectComposer(renderer);
@@ -549,11 +635,11 @@
             canvas.width = 128; canvas.height = 128;
             const ctx = canvas.getContext('2d');
             ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0,0,128,128);
-            ctx.fillStyle = '#880000'; 
+            ctx.fillRect(0, 0, 128, 128);
+            ctx.fillStyle = '#880000';
             ctx.beginPath();
-            for(let i=-128; i<256; i+=32) {
-                ctx.moveTo(i, 0); ctx.lineTo(i+32, 128); ctx.lineTo(i+16, 128); ctx.lineTo(i-16, 0);
+            for (let i = -128; i < 256; i += 32) {
+                ctx.moveTo(i, 0); ctx.lineTo(i + 32, 128); ctx.lineTo(i + 16, 128); ctx.lineTo(i - 16, 0);
             }
             ctx.fill();
             caneTexture = new THREE.CanvasTexture(canvas);
@@ -567,10 +653,10 @@
                 this.mesh = mesh;
                 this.type = type;
                 this.isDust = isDust;
-                
+
                 this.posTree = new THREE.Vector3();
                 this.posScatter = new THREE.Vector3();
-                this.baseScale = mesh.scale.x; 
+                this.baseScale = mesh.scale.x;
 
                 // Individual Spin Speed
                 // Photos spin slower to be readable
@@ -589,17 +675,17 @@
                 // TREE: Tight Spiral
                 const h = CONFIG.particles.treeHeight;
                 const halfH = h / 2;
-                let t = Math.random(); 
-                t = Math.pow(t, 0.8); 
+                let t = Math.random();
+                t = Math.pow(t, 0.8);
                 const y = (t * h) - halfH;
-                let rMax = CONFIG.particles.treeRadius * (1.0 - t); 
+                let rMax = CONFIG.particles.treeRadius * (1.0 - t);
                 if (rMax < 0.5) rMax = 0.5;
-                const angle = t * 50 * Math.PI + Math.random() * Math.PI; 
-                const r = rMax * (0.8 + Math.random() * 0.4); 
+                const angle = t * 50 * Math.PI + Math.random() * Math.PI;
+                const r = rMax * (0.8 + Math.random() * 0.4);
                 this.posTree.set(Math.cos(angle) * r, y, Math.sin(angle) * r);
 
                 // SCATTER: 3D Sphere
-                let rScatter = this.isDust ? (12 + Math.random()*20) : (8 + Math.random()*12);
+                let rScatter = this.isDust ? (12 + Math.random() * 20) : (8 + Math.random() * 12);
                 const theta = Math.random() * Math.PI * 2;
                 const phi = Math.acos(2 * Math.random() - 1);
                 this.posScatter.set(
@@ -615,7 +701,7 @@
                     const desiredWorldPos = new THREE.Vector3(0, 2, 35);
                     const currentWorldPos = new THREE.Vector3();
                     this.mesh.getWorldPosition(currentWorldPos);
-                    
+
                     // Snap to target if close enough to prevent micro-drifting/wobble from parent rotation
                     if (currentWorldPos.distanceTo(desiredWorldPos) < 0.5) {
                         currentWorldPos.copy(desiredWorldPos);
@@ -624,78 +710,78 @@
                         const lerpSpeed = 8.0;
                         currentWorldPos.lerp(desiredWorldPos, lerpSpeed * dt);
                     }
-                    
+
                     // Convert back to Local Space and set directly
                     const invMatrix = new THREE.Matrix4().copy(mainGroup.matrixWorld).invert();
                     this.mesh.position.copy(currentWorldPos).applyMatrix4(invMatrix);
-                    
+
                     // Lock rotation to camera
-                    this.mesh.lookAt(camera.position); 
+                    this.mesh.lookAt(camera.position);
 
                     // Scale up
                     const s = 4.5;
-                    this.mesh.scale.lerp(new THREE.Vector3(s,s,s), 6*dt);
+                    this.mesh.scale.lerp(new THREE.Vector3(s, s, s), 6 * dt);
                     return;
                 }
 
                 let target = this.posTree;
-                
+
                 if (mode === 'SCATTER' || mode === 'FOCUS') target = this.posScatter;
 
                 // Movement Easing
-                const lerpSpeed = 2.0; 
+                const lerpSpeed = 2.0;
                 this.mesh.position.lerp(target, lerpSpeed * dt);
 
                 // Rotation Logic
-                if (mode === 'SCATTER' || mode === 'FOCUS') { 
-                     this.mesh.rotation.x += this.spinSpeed.x * dt;
-                     this.mesh.rotation.y += this.spinSpeed.y * dt;
-                     this.mesh.rotation.z += this.spinSpeed.z * dt;
+                if (mode === 'SCATTER' || mode === 'FOCUS') {
+                    this.mesh.rotation.x += this.spinSpeed.x * dt;
+                    this.mesh.rotation.y += this.spinSpeed.y * dt;
+                    this.mesh.rotation.z += this.spinSpeed.z * dt;
                 } else if (mode === 'TREE') {
                     // Reset rotations slowly
                     this.mesh.rotation.x = THREE.MathUtils.lerp(this.mesh.rotation.x, 0, dt);
                     this.mesh.rotation.z = THREE.MathUtils.lerp(this.mesh.rotation.z, 0, dt);
-                    this.mesh.rotation.y += 0.5 * dt; 
+                    this.mesh.rotation.y += 0.5 * dt;
                 }
-                
+
                 // Scale Logic
                 let s = this.baseScale;
                 if (this.isDust) {
                     s = this.baseScale * (0.8 + 0.4 * Math.sin(clock.elapsedTime * 4 + this.mesh.id));
-                    if (mode === 'TREE') s = 0; 
+                    if (mode === 'TREE') s = 0;
                 } else if ((mode === 'SCATTER' || mode === 'FOCUS') && this.type === 'PHOTO') {
-                    s = this.baseScale * 2.5; 
+                    s = this.baseScale * 2.5;
                 } else if (mode === 'FOCUS') {
-                     s = this.baseScale * 0.8; 
+                    s = this.baseScale * 0.8;
                 }
-                
-                this.mesh.scale.lerp(new THREE.Vector3(s,s,s), 4*dt);
+
+                this.mesh.scale.lerp(new THREE.Vector3(s, s, s), 4 * dt);
             }
         }
 
         // --- CREATION ---
         function createParticles() {
-            const sphereGeo = new THREE.SphereGeometry(0.5, 32, 32); 
-            const boxGeo = new THREE.BoxGeometry(0.55, 0.55, 0.55); 
+            const sphereGeo = new THREE.SphereGeometry(0.5, 32, 32);
+            const boxGeo = new THREE.BoxGeometry(0.55, 0.55, 0.55);
             const curve = new THREE.CatmullRomCurve3([
                 new THREE.Vector3(0, -0.5, 0), new THREE.Vector3(0, 0.3, 0),
                 new THREE.Vector3(0.1, 0.5, 0), new THREE.Vector3(0.3, 0.4, 0)
             ]);
             const candyGeo = new THREE.TubeGeometry(curve, 16, 0.08, 8, false);
 
-            const goldMat = new THREE.MeshStandardMaterial({
+            goldMat = new THREE.MeshStandardMaterial({
                 color: CONFIG.colors.champagneGold,
                 metalness: 1.0, roughness: 0.1,
-                envMapIntensity: 2.0, 
-                emissive: 0x443300,   
+                envMapIntensity: 2.0,
+                emissive: 0x443300,
                 emissiveIntensity: 0.3
             });
 
-            const greenMat = new THREE.MeshStandardMaterial({
+            greenMat = new THREE.MeshStandardMaterial({
                 color: CONFIG.colors.deepGreen,
                 metalness: 0.2, roughness: 0.8,
                 emissive: 0x002200,
-                emissiveIntensity: 0.2 
+                emissiveIntensity: 0.2
             });
 
             const redMat = new THREE.MeshPhysicalMaterial({
@@ -703,13 +789,13 @@
                 metalness: 0.3, roughness: 0.2, clearcoat: 1.0,
                 emissive: 0x330000
             });
-            
+
             const candyMat = new THREE.MeshStandardMaterial({ map: caneTexture, roughness: 0.4 });
 
             for (let i = 0; i < CONFIG.particles.count; i++) {
                 const rand = Math.random();
                 let mesh, type;
-                
+
                 if (rand < 0.40) {
                     mesh = new THREE.Mesh(boxGeo, greenMat);
                     type = 'BOX';
@@ -728,9 +814,9 @@
                 }
 
                 const s = 0.4 + Math.random() * 0.5;
-                mesh.scale.set(s,s,s);
-                mesh.rotation.set(Math.random()*6, Math.random()*6, Math.random()*6);
-                
+                mesh.scale.set(s, s, s);
+                mesh.rotation.set(Math.random() * 6, Math.random() * 6, Math.random() * 6);
+
                 mainGroup.add(mesh);
                 particleSystem.push(new Particle(mesh, type, false));
             }
@@ -741,21 +827,65 @@
                 metalness: 1.0, roughness: 0
             });
             const star = new THREE.Mesh(starGeo, starMat);
-            star.position.set(0, CONFIG.particles.treeHeight/2 + 1.2, 0);
+            star.position.set(0, CONFIG.particles.treeHeight / 2 + 1.2, 0);
             mainGroup.add(star);
-            
+
             mainGroup.add(photoMeshGroup);
+
+            // 初始化主题色
+            updateTreeTheme(STATE.themeMode);
+        }
+
+        function updateTreeTheme(mode) {
+            if (!goldMat || !greenMat) return;
+            STATE.themeMode = mode;
+
+            // 高亮当前选中的按钮
+            ['theme-gold', 'theme-mix', 'theme-green'].forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) {
+                    if (id.includes(mode.toLowerCase())) btn.classList.add('ring-2', 'ring-white', 'scale-110');
+                    else btn.classList.remove('ring-2', 'ring-white', 'scale-110');
+                }
+            });
+
+            if (mode === 'GOLD') {
+                // --- 豪华金 ---
+                goldMat.color.setHex(CONFIG.colors.champagneGold);
+                goldMat.emissive.setHex(0x664400);
+
+                greenMat.color.setHex(0x443311);
+                greenMat.emissive.setHex(0x221100);
+                greenMat.metalness = 0.8;
+            } else if (mode === 'MIX') {
+                // --- 经典绿金 ---
+                greenMat.color.setHex(CONFIG.colors.deepGreen);
+                greenMat.emissive.setHex(0x0a3310);
+                greenMat.metalness = 0.3;
+
+                goldMat.color.setHex(CONFIG.colors.champagneGold);
+                goldMat.emissive.setHex(0x443300);
+            } else if (mode === 'GREEN') {
+                // --- 纯绿模式 ---
+                greenMat.color.setHex(CONFIG.colors.deepGreen);
+                greenMat.emissive.setHex(0x0a3310);
+                greenMat.metalness = 0.2;
+
+                // 将原本金色的部分也变成另一种绿（比如亮绿）
+                goldMat.color.setHex(0x2e7d32);
+                goldMat.emissive.setHex(0x1b5e20);
+            }
         }
 
         function createDust() {
             const geo = new THREE.TetrahedronGeometry(0.08, 0);
             const mat = new THREE.MeshBasicMaterial({ color: 0xffeebb, transparent: true, opacity: 0.8 });
-            
-            for(let i=0; i<CONFIG.particles.dustCount; i++) {
-                 const mesh = new THREE.Mesh(geo, mat);
-                 mesh.scale.setScalar(0.5 + Math.random());
-                 mainGroup.add(mesh);
-                 particleSystem.push(new Particle(mesh, 'DUST', true));
+
+            for (let i = 0; i < CONFIG.particles.dustCount; i++) {
+                const mesh = new THREE.Mesh(geo, mat);
+                mesh.scale.setScalar(0.5 + Math.random());
+                mainGroup.add(mesh);
+                particleSystem.push(new Particle(mesh, 'DUST', true));
             }
         }
 
@@ -763,13 +893,13 @@
             const canvas = document.createElement('canvas');
             canvas.width = 512; canvas.height = 512;
             const ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#050505'; ctx.fillRect(0,0,512,512);
-            ctx.strokeStyle = '#eebb66'; ctx.lineWidth = 15; ctx.strokeRect(20,20,472,472);
+            ctx.fillStyle = '#050505'; ctx.fillRect(0, 0, 512, 512);
+            ctx.strokeStyle = '#eebb66'; ctx.lineWidth = 15; ctx.strokeRect(20, 20, 472, 472);
             ctx.font = '500 60px Times New Roman'; ctx.fillStyle = '#eebb66';
-            ctx.textAlign = 'center'; 
+            ctx.textAlign = 'center';
             ctx.fillText("JOYEUX", 256, 230);
             ctx.fillText("NOEL", 256, 300);
-            
+
             STATE.photoSources.push(canvas.toDataURL());
 
             const tex = new THREE.CanvasTexture(canvas);
@@ -790,17 +920,17 @@
             const group = new THREE.Group();
             group.add(frame);
             group.add(photo);
-            
+
             const s = 0.8;
-            group.scale.set(s,s,s);
-            
+            group.scale.set(s, s, s);
+
             photoMeshGroup.add(group);
             particleSystem.push(new Particle(group, 'PHOTO', false));
         }
-        
+
         function handleImageUpload(e) {
             const files = e.target.files;
-            if(!files.length) return;
+            if (!files.length) return;
 
             // Clear default photo if this is the first user upload
             if (!STATE.hasUserPhotos) {
@@ -829,10 +959,10 @@
 
             const overlay = document.getElementById('slideshow-overlay');
             const img = document.getElementById('slideshow-img');
-            
+
             STATE.slideshowIndex = (STATE.slideshowIndex + 1) % STATE.photoSources.length;
             img.src = STATE.photoSources[STATE.slideshowIndex];
-            
+
             overlay.classList.remove('hidden');
         }
 
@@ -852,10 +982,12 @@
                 cameraWindowCanvas.height = 240;
 
                 console.log('初始化 MediaPipe...');
-                
-                hands = new Hands({locateFile: (file) => {
-                    return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
-                }});
+
+                hands = new Hands({
+                    locateFile: (file) => {
+                        return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+                    }
+                });
 
                 hands.setOptions({
                     maxNumHands: 2,
@@ -867,17 +999,17 @@
                 hands.onResults(onResults);
 
                 const cameraUtils = new Camera(video, {
-                    onFrame: async () => { 
-                        await hands.send({image: video}); 
+                    onFrame: async () => {
+                        await hands.send({ image: video });
                     },
-                    width: 640, 
+                    width: 640,
                     height: 480
                 });
 
                 try {
                     await cameraUtils.start();
                     console.log('MediaPipe 初始化成功');
-                    
+
                     // 同步视频流到窗口
                     if (video.srcObject) {
                         cameraWindowVideo.srcObject = video.srcObject;
@@ -896,7 +1028,7 @@
             if (cameraWindowCtx && cameraWindowCanvas) {
                 cameraWindowCtx.save();
                 cameraWindowCtx.clearRect(0, 0, cameraWindowCanvas.width, cameraWindowCanvas.height);
-                
+
                 // 绘制手势线条
                 if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
                     results.multiHandLandmarks.forEach((landmarks, index) => {
@@ -913,333 +1045,151 @@
                         });
                     });
                 }
-                
+
                 cameraWindowCtx.restore();
             }
 
-                        // 手势识别逻辑
-
-                        if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
-
-                            let rotHand = null;   // 物理右手 (对应系统标号 L)
-
-                            let pinchHand = null; // 物理左手 (对应系统标号 R)
-
-            
-
-                            results.multiHandedness.forEach((handInfo, index) => {
-
-                                const label = handInfo.label; 
-
-                                const landmarks = results.multiHandLandmarks[index];
-
-            
-
-                                if (label === 'Left') {
-
-                                    rotHand = landmarks;
-
-                                } else if (label === 'Right') {
-
-                                    pinchHand = landmarks;
-
-                                }
-
-                            });
-
-            
-
-                            // --- 1. 全局逻辑：物理右手 (系统L) 控制形态 (Tree vs Scatter) ---
-
-                            if (rotHand) {
-
-                                STATE.hand.detected = true;
-
-                                STATE.hand.x = (rotHand[9].x - 0.5) * 2; 
-
-                                STATE.hand.y = (rotHand[9].y - 0.5) * 2;
-
-            
-
-                                const wrist = rotHand[0];
-
-                                const tips = [rotHand[8], rotHand[12], rotHand[16], rotHand[20]];
-
-                                let avgDist = 0;
-
-                                tips.forEach(t => avgDist += Math.hypot(t.x - wrist.x, t.y - wrist.y));
-
-                                avgDist /= 4;
-
-            
-
-                                // 只有当没有在 3D 聚焦查看照片时，才允许右手切换模式
-
-                                if (STATE.mode !== 'FOCUS') {
-
-                                    if (avgDist < 0.25) {
-
-                                        STATE.mode = 'TREE';
-
-                                        STATE.focusTarget = null;
-
-                                    } else if (avgDist > 0.4) {
-
-                                        STATE.mode = 'SCATTER';
-
-                                    }
-
-                                }
-
-                            } else {
-
-                                // 如果物理右手消失，状态复位
-
-                                STATE.hand.detected = false;
-
-                            }
-
-            
-
-                            // --- 2. 分支逻辑：根据是否开启“手动旋转控制” ---
-
-                            if (STATE.isRotationEnabled) {
-
-                                // === Mode A: 旋转控制开启 ===
-
-                                // 物理右手 (rotHand)：坐标已获取，animate() 会处理旋转
-
-                                
-
-                                // 物理左手 (pinchHand / 系统R)：3D 捏合查看
-
-                                let isPinching = false;
-
-                                if (pinchHand) {
-
-                                    const thumb = pinchHand[4]; 
-
-                                    const index = pinchHand[8]; 
-
-                                    const pinchDist = Math.hypot(thumb.x - index.x, thumb.y - index.y);
-
-                                    
-
-                                    // 迟滞逻辑
-
-                                    if (STATE.hand.rightPinchActive) {
-
-                                        if (pinchDist < 0.08) isPinching = true; 
-
-                                    } else {
-
-                                        if (pinchDist < 0.04) isPinching = true; 
-
-                                    }
-
-                                    STATE.hand.rightPinchActive = isPinching;
-
-                                    
-
-                                    if (isPinching) {
-
-                                        if (STATE.mode !== 'FOCUS') {
-
-                                            STATE.mode = 'FOCUS';
-
-                                            const photos = particleSystem.filter(p => p.type === 'PHOTO');
-
-                                            if (photos.length) {
-
-                                                // [NEW LOGIC] Find the photo closest to the screen center in the front hemisphere
-
-                                                let bestPhoto = null;
-
-                                                let minScore = Infinity;
-
-                                                const photoWorldPos = new THREE.Vector3();
-
-            
-
-                                                photos.forEach(photo => {
-
-                                                    photo.mesh.getWorldPosition(photoWorldPos);
-
-                                                    
-
-                                                    // 1. Only consider photos in the front hemisphere (closer to camera)
-
-                                                    if (photoWorldPos.z > 0) {
-
-                                                        // 2. Score based on proximity to the screen's central axis (X=0, Y=2)
-
-                                                        const dx = photoWorldPos.x;
-
-                                                        const dy = photoWorldPos.y - 2;
-
-                                                        const score = dx * dx + dy * dy;
-
-            
-
-                                                        if (score < minScore) {
-
-                                                            minScore = score;
-
-                                                            bestPhoto = photo;
-
-                                                        }
-
-                                                    }
-
-                                                });
-
-                                                
-
-                                                if (bestPhoto) {
-
-                                                    STATE.focusTarget = bestPhoto.mesh;
-
-                                                }
-
-                                            }
-
-                                        }
-
-                                    } else {
-
-                                        // [CRITICAL] Release Logic: Exit FOCUS mode when pinch is released
-
-                                        if (STATE.mode === 'FOCUS') {
-
-                                            STATE.mode = 'SCATTER'; // Default return state
-
-                                            STATE.focusTarget = null;
-
-                                            
-
-                                            // 检查物理右手状态以避免帧抖动
-
-                                            if (rotHand) {
-
-                                                const wrist = rotHand[0];
-
-                                                const tips = [rotHand[8], rotHand[12], rotHand[16], rotHand[20]];
-
-                                                let avgDist = 0;
-
-                                                tips.forEach(t => avgDist += Math.hypot(t.x - wrist.x, t.y - wrist.y));
-
-                                                avgDist /= 4;
-
-                                                if (avgDist < 0.25) STATE.mode = 'TREE';
-
-                                            }
-
-                                        }
-
-                                    }
-
-                                } else {
-
-                                    // 如果物理左手丢失追踪，也退出 FOCUS
-
-                                    STATE.hand.rightPinchActive = false;
-
-                                    if (STATE.mode === 'FOCUS') {
-
-                                        STATE.mode = 'SCATTER';
-
-                                        STATE.focusTarget = null;
-
-                                    }
-
-                                }
-
-            
-
-                            } else {
-
-                                // === Mode B: 手动旋转控制关闭 (自动旋转) ===
-
-                                // 物理左手 (pinchHand / 系统R)：幻灯片预览
-
-                                if (pinchHand) {
-
-                                    const thumb = pinchHand[4];
-
-                                    const index = pinchHand[8];
-
-                                    const pinchDist = Math.hypot(thumb.x - index.x, thumb.y - index.y);
-
-                                    const isPinching = pinchDist < 0.04 || (STATE.hand.leftPinchTriggered && pinchDist < 0.08);
-
-            
-
-                                    if (isPinching) {
-
-                                        if (!STATE.hand.leftPinchTriggered) {
-
-                                            STATE.hand.leftPinchTriggered = true;
-
-                                            cycleSlideshow();
-
-                                        }
-
-                                    } else {
-
-                                        STATE.hand.leftPinchTriggered = false;
-
-                                        // 松开关闭预览
-
-                                        const overlay = document.getElementById('slideshow-overlay');
-
-                                        if (overlay && !overlay.classList.contains('hidden')) {
-
-                                            overlay.classList.add('hidden');
-
-                                        }
-
-                                    }
-
-                                } else {
-
-                                     // 物理左手丢失，关闭预览
-
-                                     STATE.hand.leftPinchTriggered = false;
-
-                                     const overlay = document.getElementById('slideshow-overlay');
-
-                                     if (overlay && !overlay.classList.contains('hidden')) {
-
-                                         overlay.classList.add('hidden');
-
-                                     }
-
-                                }
-
-                            }
-
-            
-
-                        } else {
-
-                            STATE.hand.detected = false;
-
-                            
-
-                            // 安全复位：确保物理左手功能（幻灯片）关闭
-
-                            STATE.hand.leftPinchTriggered = false;
-
-                            const overlay = document.getElementById('slideshow-overlay');
-
-                            if (overlay && !overlay.classList.contains('hidden')) {
-
-                                overlay.classList.add('hidden');
-
-                            }
-
+            // 手势识别逻辑
+            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                let rotHand = null;   // 物理右手 (对应系统标号 L)
+                let pinchHand = null; // 物理左手 (对应系统标号 R)
+
+                results.multiHandedness.forEach((handInfo, index) => {
+                    const label = handInfo.label;
+                    const landmarks = results.multiHandLandmarks[index];
+
+                    if (label === 'Left') {
+                        rotHand = landmarks;
+                    } else if (label === 'Right') {
+                        pinchHand = landmarks;
+                    }
+                });
+
+                // --- 1. 全局逻辑：物理右手 (系统L) 控制形态 (Tree vs Scatter) ---
+                if (rotHand) {
+                    STATE.hand.detected = true;
+                    STATE.hand.x = (rotHand[9].x - 0.5) * 2;
+                    STATE.hand.y = (rotHand[9].y - 0.5) * 2;
+
+                    const wrist = rotHand[0];
+                    const tips = [rotHand[8], rotHand[12], rotHand[16], rotHand[20]];
+                    let avgDist = 0;
+                    tips.forEach(t => avgDist += Math.hypot(t.x - wrist.x, t.y - wrist.y));
+                    avgDist /= 4;
+
+                    // 只有当没有在 3D 聚焦查看照片时，才允许右手切换模式
+                    if (STATE.mode !== 'FOCUS') {
+                        if (avgDist < 0.25) {
+                            STATE.mode = 'TREE';
+                            STATE.focusTarget = null;
+                        } else if (avgDist > 0.4) {
+                            STATE.mode = 'SCATTER';
                         }
+                    }
+                } else {
+                    // 如果物理右手消失，状态复位
+                    STATE.hand.detected = false;
+                }
+
+                // --- 2. 分支逻辑：根据是否开启“手动旋转控制” ---
+                if (STATE.isRotationEnabled) {
+                    // === Mode A: 旋转控制开启 ===
+                    // 物理右手 (rotHand)：坐标已获取，animate() 会处理旋转
+
+                    // 物理左手 (pinchHand / 系统R)：3D 捏合查看
+                    let isPinching = false;
+                    if (pinchHand) {
+                        const thumb = pinchHand[4];
+                        const index = pinchHand[8];
+                        const pinchDist = Math.hypot(thumb.x - index.x, thumb.y - index.y);
+
+                        // 迟滞逻辑
+                        if (STATE.hand.rightPinchActive) {
+                            if (pinchDist < 0.08) isPinching = true;
+                        } else {
+                            if (pinchDist < 0.04) isPinching = true;
+                        }
+                        STATE.hand.rightPinchActive = isPinching;
+
+                        if (isPinching) {
+                            if (STATE.mode !== 'FOCUS') {
+                                STATE.mode = 'FOCUS';
+                                const photos = particleSystem.filter(p => p.type === 'PHOTO');
+                                if (photos.length) {
+                                    // [NEW LOGIC] Find the photo closest to the screen center in the front hemisphere
+                                    let bestPhoto = null;
+                                    let minScore = Infinity;
+                                    const photoWorldPos = new THREE.Vector3();
+
+                                    photos.forEach(photo => {
+                                        photo.mesh.getWorldPosition(photoWorldPos);
+                                        if (photoWorldPos.z > 0) {
+                                            const dx = photoWorldPos.x;
+                                            const dy = photoWorldPos.y - 2;
+                                            const score = dx * dx + dy * dy;
+                                            if (score < minScore) {
+                                                minScore = score;
+                                                bestPhoto = photo;
+                                            }
+                                        }
+                                    });
+                                    if (bestPhoto) STATE.focusTarget = bestPhoto.mesh;
+                                }
+                            }
+                        } else {
+                            if (STATE.mode === 'FOCUS') {
+                                STATE.mode = 'SCATTER';
+                                STATE.focusTarget = null;
+                                if (rotHand) {
+                                    const wrist = rotHand[0];
+                                    const tips = [rotHand[8], rotHand[12], rotHand[16], rotHand[20]];
+                                    let avgDist = 0;
+                                    tips.forEach(t => avgDist += Math.hypot(t.x - wrist.x, t.y - wrist.y));
+                                    avgDist /= 4;
+                                    if (avgDist < 0.25) STATE.mode = 'TREE';
+                                }
+                            }
+                        }
+                    } else {
+                        STATE.hand.rightPinchActive = false;
+                        if (STATE.mode === 'FOCUS') {
+                            STATE.mode = 'SCATTER';
+                            STATE.focusTarget = null;
+                        }
+                    }
+
+                } else {
+                    // === Mode B: 手动旋转控制关闭 (自动旋转) ===
+                    // 物理左手 (pinchHand / 系统R)：幻灯片预览
+                    if (pinchHand) {
+                        const thumb = pinchHand[4];
+                        const index = pinchHand[8];
+                        const pinchDist = Math.hypot(thumb.x - index.x, thumb.y - index.y);
+                        const isPinching = pinchDist < 0.04 || (STATE.hand.leftPinchTriggered && pinchDist < 0.08);
+
+                        if (isPinching) {
+                            if (!STATE.hand.leftPinchTriggered) {
+                                STATE.hand.leftPinchTriggered = true;
+                                cycleSlideshow();
+                            }
+                        } else {
+                            STATE.hand.leftPinchTriggered = false;
+                            const overlay = document.getElementById('slideshow-overlay');
+                            if (overlay && !overlay.classList.contains('hidden')) overlay.classList.add('hidden');
+                        }
+                    } else {
+                        STATE.hand.leftPinchTriggered = false;
+                        const overlay = document.getElementById('slideshow-overlay');
+                        if (overlay && !overlay.classList.contains('hidden')) overlay.classList.add('hidden');
+                    }
+                }
+
+            } else {
+                STATE.hand.detected = false;
+                STATE.hand.leftPinchTriggered = false;
+                const overlay = document.getElementById('slideshow-overlay');
+                if (overlay && !overlay.classList.contains('hidden')) overlay.classList.add('hidden');
+            }
         }
 
         function setupEvents() {
@@ -1250,7 +1200,7 @@
                 composer.setSize(window.innerWidth, window.innerHeight);
             });
             document.getElementById('file-input').addEventListener('change', handleImageUpload);
-            
+
             // Slideshow Close Button
             const slideshowClose = document.getElementById('slideshow-close');
             const slideshowOverlay = document.getElementById('slideshow-overlay');
@@ -1284,7 +1234,7 @@
             const gestureGuide = document.getElementById('gesture-guide');
             const gestureGuideClose = document.getElementById('gesture-guide-close');
             const gestureGuideToggleBtn = document.getElementById('gesture-guide-toggle-btn');
-            
+
             gestureGuideClose.addEventListener('click', () => {
                 toggleGestureGuide();
             });
@@ -1324,11 +1274,23 @@
             if (rotationToggle) {
                 // 初始化状态
                 rotationToggle.checked = STATE.isRotationEnabled;
-                
+
                 rotationToggle.addEventListener('change', (e) => {
                     STATE.isRotationEnabled = e.target.checked;
                 });
             }
+
+            // 主题颜色选择
+            const goldBtn = document.getElementById('theme-gold');
+            const mixBtn = document.getElementById('theme-mix');
+            const greenBtn = document.getElementById('theme-green');
+
+            if (goldBtn) goldBtn.addEventListener('click', () => updateTreeTheme('GOLD'));
+            if (mixBtn) mixBtn.addEventListener('click', () => updateTreeTheme('MIX'));
+            if (greenBtn) greenBtn.addEventListener('click', () => updateTreeTheme('GREEN'));
+
+            // 初始化主题
+            updateTreeTheme(STATE.themeMode);
         }
 
         function toggleFullScreen() {
@@ -1344,7 +1306,7 @@
         function toggleGestureGuide() {
             const gestureGuide = document.getElementById('gesture-guide');
             const isVisible = gestureGuide.classList.contains('visible');
-            
+
             if (isVisible) {
                 gestureGuide.classList.remove('visible');
             } else {
@@ -1383,19 +1345,19 @@
             // Rotation Logic
             if (STATE.mode === 'TREE') {
                 // 树模式：固定慢慢旋转
-                STATE.rotation.y += 0.6 * dt; 
+                STATE.rotation.y += 0.6 * dt;
                 STATE.rotation.x += (0 - STATE.rotation.x) * 2.0 * dt;
             } else {
                 // 散开或查看模式
                 if (STATE.isRotationEnabled && STATE.hand.detected) {
                     // 开启控制且检测到手势：允许手动控制
-                    const targetRotY = STATE.hand.x * Math.PI * 3.0; 
+                    const targetRotY = STATE.hand.x * Math.PI * 3.0;
                     const targetRotX = STATE.hand.y * Math.PI * 0.25;
                     STATE.rotation.y += (targetRotY - STATE.rotation.y) * 3.0 * dt;
                     STATE.rotation.x += (targetRotX - STATE.rotation.x) * 3.0 * dt;
                 } else {
                     // 自动旋转
-                    STATE.rotation.y += 1.2 * dt; 
+                    STATE.rotation.y += 1.2 * dt;
                     STATE.rotation.x += (0 - STATE.rotation.x) * 2.0 * dt;
                 }
             }
@@ -1410,4 +1372,5 @@
         init();
     </script>
 </body>
+
 </html>
