@@ -109,6 +109,16 @@
             animation: slideInRight 0.4s ease-out;
         }
 
+        /* Mobile Adaptation for Camera Window */
+        @media (max-width: 768px) {
+            #camera-window {
+                width: 160px;
+                height: 120px;
+                bottom: 15px;
+                right: 15px;
+            }
+        }
+
         @keyframes slideInRight {
             from {
                 opacity: 0;
